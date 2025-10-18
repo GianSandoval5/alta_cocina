@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Gastronómica 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        h1 {
+            color: white;
+            font-size: 4em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.4em;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 50px 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 18px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .category-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 50px;
+            padding: 30px 50px 80px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .dish-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-20px) rotateX(5deg);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(102, 126, 234, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        .dish-card:hover .dish-image {
+            transform: scale(1.15) rotate(2deg);
+            filter: brightness(1) contrast(1.2);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .dish-card:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .dish-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9em;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dish-info {
+            padding: 35px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .dish-name {
+            font-size: 2em;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .dish-description {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-size: 1.05em;
+        }
+
+        .price-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dish-price {
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .rating {
+            display: flex;
+            gap: 5px;
+            font-size: 1.3em;
+        }
+
+        .star {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .ingredients {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .ingredient-tag {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            font-size: 0.9em;
+            color: white;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .ingredient-tag:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.5) 100%);
+            transform: translateY(-2px);
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 30px;
+            }
+
+            .image-container {
+                height: 300px;
+            }
+        }
+
+        .loading-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(90deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍽️ ALTA COCINA</h1>
+        <p class="subtitle">Experiencia gastronómica en 3D</p>
+    </div>
+
+    <div class="categories">
+        <button class="category-btn active" data-category="all">Todos</button>
+        <button class="category-btn" data-category="entradas">Entradas</button>
+        <button class="category-btn" data-category="principales">Principales</button>
+        <button class="category-btn" data-category="postres">Postres</button>
+    </div>
+
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        const dishes = [
+            {
+                id: 1,
+                name: "Ceviche de Pescado",
+                category: "entradas",
+                description: "Pescado fresco marinado en limón con cebolla morada, cilantro y ají limo. Servido con camote y choclo.",
+                price: "$22.00",
+                rating: 5,
+                ingredients: ["Pescado Fresco", "Limón", "Cebolla Morada", "Ají Limo"],
+                image: "https://micevichedehoy.com/assets/images/ceviche-de-pescado_800x534.webp",
+                badge: "Popular"
+            },
+            {
+                id: 2,
+                name: "Lomo Saltado Premium",
+                category: "principales",
+                description: "Tiras de lomo fino salteadas con cebolla, tomate y papas fritas. Acompañado de arroz blanco.",
+                price: "$28.00",
+                rating: 5,
+                ingredients: ["Lomo", "Papas", "Tomate", "Cebolla"],
+                image: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&q=80",
+                badge: "Chef's Pick"
+            },
+            {
+                id: 3,
+                name: "Tiramisú Artesanal",
+                category: "postres",
+                description: "Capas de bizcocho savoiardi con crema de mascarpone y cacao italiano. Receta tradicional.",
+                price: "$14.00",
+                rating: 5,
+                ingredients: ["Mascarpone", "Café", "Cacao", "Bizcocho"],
+                image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80",
+                badge: "Dulce"
+            },
+            {
+                id: 4,
+                name: "Causa Limeña",
+                category: "entradas",
+                description: "Terrina de papa amarilla con pollo, aguacate y mayonesa casera. Tradicional plato peruano.",
+                price: "$18.00",
+                rating: 4,
+                ingredients: ["Papa Amarilla", "Pollo", "Aguacate", "Limón"],
+                image: "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800&q=80",
+                badge: "Tradicional"
+            },
+            {
+                id: 5,
+                name: "Paella de Mariscos",
+                category: "principales",
+                description: "Arroz con azafrán, langostinos, mejillones y calamares. Receta mediterránea auténtica.",
+                price: "$32.00",
+                rating: 5,
+                ingredients: ["Arroz", "Mariscos", "Azafrán", "Pimientos"],
+                image: "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800&q=80",
+                badge: "Premium"
+            },
+            {
+                id: 6,
+                name: "Cheesecake de Frutos Rojos",
+                category: "postres",
+                description: "Tarta de queso cremosa con coulis de frutos rojos y base de galleta. Irresistible.",
+                price: "$16.00",
+                rating: 5,
+                ingredients: ["Queso Crema", "Frutos Rojos", "Galletas", "Vainilla"],
+                image: "https://cdn0.recetasgratis.net/es/posts/1/4/9/cheesecake_de_frutos_rojos_73941_orig.jpg",
+                badge: "Favorito"
+            },
+            {
+                id: 7,
+                name: "Sushi Premium Mix",
+                category: "entradas",
+                description: "Selección de makis, nigiris y sashimi con pescado fresco del día. Arte japonés.",
+                price: "$35.00",
+                rating: 5,
+                ingredients: ["Salmón", "Atún", "Aguacate", "Arroz"],
+                image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&q=80",
+                badge: "Premium"
+            },
+            {
+                id: 8,
+                name: "Filete Mignon",
+                category: "principales",
+                description: "Corte premium de lomo fino con reducción de vino tinto, papas gratinadas y vegetales.",
+                price: "$42.00",
+                rating: 5,
+                ingredients: ["Filete", "Vino Tinto", "Papas", "Espárragos"],
+                image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+                badge: "Exclusivo"
+            },
+            {
+                id: 9,
+                name: "Crème Brûlée",
+                category: "postres",
+                description: "Crema pastelera con costra de azúcar caramelizada. Clásico francés impecable.",
+                price: "$12.00",
+                rating: 4,
+                ingredients: ["Crema", "Vainilla", "Azúcar", "Yemas"],
+                image: "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=800&q=80",
+                badge: "Clásico"
+            }
+        ];
+
+        function createStars(rating) {
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                stars += i < rating ? '<span class="star">★</span>' : '<span class="star" style="opacity:0.3">★</span>';
+            }
+            return stars;
+        }
+
+        function renderDishes(category) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            const filteredDishes = category === 'all' 
+                ? dishes 
+                : dishes.filter(d => d.category === category);
+
+            filteredDishes.forEach(dish => {
+                const card = document.createElement('div');
+                card.className = 'dish-card';
+                card.innerHTML = `
+                    <div class="image-container">
+                        <div class="loading-placeholder"></div>
+                        <img src="${dish.image}" alt="${dish.name}" class="dish-image" onload="this.previousElementSibling.style.display='none'">
+                        <div class="image-overlay"></div>
+                        <div class="dish-badge">${dish.badge}</div>
+                    </div>
+                    <div class="dish-info">
+                        <div class="dish-name">${dish.name}</div>
+                        <div class="dish-description">${dish.description}</div>
+                        <div class="price-rating">
+                            <div class="dish-price">${dish.price}</div>
+                            <div class="rating">
+                                ${createStars(dish.rating)}
+                            </div>
+                        </div>
+                        <div class="ingredients">
+                            ${dish.ingredients.map(ing => `<span class="ingredient-tag">${ing}</span>`).join('')}
+                        </div>
+                        <button class="order-btn">Ordenar Ahora</button>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+
+            // Efecto 3D con mouse
+            document.querySelectorAll('.dish-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-20px)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+                });
+            });
+        }
+
+        // Event listeners para categorías
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                const category = e.target.dataset.category;
+                renderDishes(category);
+            });
+        });
+
+        // Inicializar
+        renderDishes('all');
+    </script>
+</body>
+</html>
