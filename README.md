@@ -13,6 +13,8 @@
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](.)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](.)
 
+**👨‍💻 Desarrollado por:** [**Gian Sandoval**](https://giansandoval.com) | [![GitHub](https://img.shields.io/badge/-@GianSandoval5-black?style=flat&logo=github)](https://github.com/GianSandoval5/) [![LinkedIn](https://img.shields.io/badge/-giansandoval-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/giansandoval/)
+
 </div>
 
 ---
@@ -575,12 +577,17 @@ Configuración > Live Server > Port: 3000
 
 <div align="center">
 
-**Proyecto desarrollado como demostración de habilidades en desarrollo frontend**
-
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](.)
-[![Portfolio](https://img.shields.io/badge/Portfolio-255E63?style=for-the-badge&logo=About.me&logoColor=white)](.)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](.)
+**Proyecto desarrollado por [Gian Sandoval](https://giansandoval.com)**
 
 *Especializado en desarrollo frontend con tecnologías web modernas*
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/GianSandoval5/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-255E63?style=for-the-badge&logo=About.me&logoColor=white)](https://giansandoval.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/giansandoval/)
+
+### 🚀 **Más proyectos en:**
+- 🌐 **Portafolio:** [giansandoval.com](https://giansandoval.com)
+- 💼 **GitHub:** [@GianSandoval5](https://github.com/GianSandoval5/)
+- 🤝 **LinkedIn:** [/in/giansandoval](https://www.linkedin.com/in/giansandoval/)
 
 </div>
